@@ -58,7 +58,7 @@ const DAY = 7;
 
 let timeline = [];
 const GAS_URL =
-"https://script.google.com/macros/s/AKfycbykXLPo7yOkRlGzwbBA8leKtM4_Qqq_wF9uLB9GwVDpDaYfkJb47is2StaHIp-OLpiR/exec";
+"https://script.google.com/macros/s/AKfycbwj995Kx89a03AbUmvUfjdOJRjVGAQKiJvt1zoBC6myGpVMduFg2la6dAoUtqiO1CZy/exec";
 
 let participant_id = "";
 let study_start = "";
@@ -99,7 +99,9 @@ timeline.push({
 
         participant_id: participant_id,
 
-        day: DAY
+        day: DAY,
+
+         word_order:  word_order
 
       })
 
@@ -138,21 +140,22 @@ timeline.push({
 ------------------------ */
 
 let study_words = [
-"人質",
-"毒薬",
-"火事",
-"憂鬱",
-"過失",
-"慣習",
-"浴槽",
-"憂慮",
-"金槌",
-"風車",
-"調和",
-"入浴",
-"天使",
-"名誉",
-"旋律"
+{id: 181, word: "人質"},
+{id: 182, word: "毒薬"},
+{id: 183, word: "火事"},
+{id: 184, word: "憂鬱"},
+{id: 185, word: "過失"},
+{id: 186, word: "慣習"},
+{id: 187, word: "浴槽"},
+{id: 188, word: "憂慮"},
+{id: 189, word: "金槌"},
+{id: 190, word: "風車"},
+{id: 191, word: "調和"},
+{id: 192, word: "入浴"},
+{id: 193, word: "天使"},
+{id: 194, word: "名誉"},
+{id: 195, word: "旋律"}
+
 ];
 
 /* ------------------------
@@ -160,13 +163,16 @@ let study_words = [
 ------------------------ */
 
 study_words = jsPsych.randomization.shuffle(study_words);
-
+const word_order = study_words.map((item, index) => ({
+  serial_position: index + 1,
+  word_id: item.id,
+  word: item.word
+}));
 /* ------------------------
    単語提示フェーズ
 ------------------------ */
 
-study_words.forEach(function(word){
-
+study_words.forEach(function(item, index){
   /* 注視点 ＋ */
 
   timeline.push({
@@ -195,13 +201,18 @@ study_words.forEach(function(word){
     stimulus: `
       <div class="center-text"
            style="font-size:100px;">
-        ${word}
+        ${item.word}
       </div>
     `,
 
     choices: "NO_KEYS",
 
-    trial_duration: 5000
+    trial_duration: 5000,
+     data: {
+      word_id: item.id,
+      word: item.word,
+      serial_position: index + 1
+    }
 
   });
 
